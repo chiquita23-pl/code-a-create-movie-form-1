@@ -4,6 +4,27 @@ import { StarIcon } from "@heroicons/vue/24/solid";
 import { items } from "./movies.json";
 const movies = ref(items);
 
+function openAddMovieDialog() {
+  const userConfirmed = window.confirm(
+    "Are you sure you want to add a new movie?"
+  );
+  if (userConfirmed) {
+    addMovie();
+  }
+}
+
+function addMovie() {
+  const newMovie = {
+    id: movies.value.length + 1,
+    name: "New Movie",
+    description: "This is a new movie.",
+    image: "https://via.placeholder.com/150",
+    genres: ["Action", "Adventure"],
+    rating: null,
+  };
+  movies.value.push(newMovie);
+}
+
 function updateRating(movieIndex, rating) {
   movies.value[movieIndex].rating = rating;
 }
@@ -11,6 +32,14 @@ function updateRating(movieIndex, rating) {
 
 <template>
   <div class="app">
+    <div class="movie-list-header">
+      <button
+        class="add-movie-button"
+        @click="openAddMovieDialog()"
+      >
+        ADD MOVIE
+      </button>
+    </div>
     <div class="movie-list">
       <div
         class="movie-item"

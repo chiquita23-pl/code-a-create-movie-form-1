@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 
-.app {
-    @apply max-w-full flex items-center justify-center h-screen mx-auto;
-}
-
 .movie-list {
     @apply flex items-center justify-center space-x-4;
 }
@@ -88,4 +84,37 @@
 
 .movie-item-star-icon {
     @apply h-5 w-5;
+}
+
+.add-movie-button {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-movie-button:hover {
+  background-color: #1d4ed8;
+}
+
+.add-movie-button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.app {
+  @apply min-h-screen flex flex-col items-center mx-auto px-4 py-8;
+}
+
+.movie-list-container {
+  @apply w-full max-w-6xl;
+}
+
+.movie-list-header {
+  @apply flex justify-end mb-5;
 }
