@@ -2,27 +2,37 @@
 import { ref } from "vue";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import { items } from "./movies.json";
+import Form from "./Form.vue";
 const movies = ref(items);
+const isFormOpen = ref(false);
+const filmDetails = ref({
+  name: "",
+  description: "",
+  image: "",
+  genres: [],
+});
 
 function openAddMovieDialog() {
-  const userConfirmed = window.confirm(
-    "Are you sure you want to add a new movie?"
-  );
-  if (userConfirmed) {
-    addMovie();
-  }
+  isFormOpen.value = true;
 }
 
 function addMovie() {
   const newMovie = {
     id: movies.value.length + 1,
-    name: "New Movie",
-    description: "This is a new movie.",
-    image: "https://via.placeholder.com/150",
-    genres: ["Action", "Adventure"],
+    name: filmDetails.value.name,
+    description: filmDetails.value.description,
+    image: filmDetails.value.image,
+    genres: filmDetails.value.genres,
     rating: null,
   };
   movies.value.push(newMovie);
+  filmDetails.value = {
+    name: "",
+    description: "",
+    image: "",
+    genres: [],
+  };
+  isFormOpen.value = false;
 }
 
 function updateRating(movieIndex, rating) {
@@ -32,78 +42,85 @@ function updateRating(movieIndex, rating) {
 
 <template>
   <div class="app">
-    <div class="movie-list-header">
-      <button
-        class="add-movie-button"
-        @click="openAddMovieDialog()"
-      >
-        ADD MOVIE
-      </button>
-    </div>
-    <div class="movie-list">
-      <div
-        class="movie-item"
-        v-for="(movie, movieIndex) in movies"
-        :key="movie.id"
-      >
-        <div class="movie-item-image-wrapper">
-          <div class="movie-item-star-wrapper">
-            <StarIcon
-              class="movie-item-star-rating-icon"
-              :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']"
-            />
-            <div class="movie-item-star-content-wrapper">
-              <span
-                v-if="movie.rating"
-                class="movie-item-star-content-rating-rated"
-              >
-                {{ movie.rating }}
-              </span>
-              <span v-else class="movie-item-star-content-rating-not-rated">
-                -
-              </span>
+    <div class="movie-list-container">
+      <div class="movie-list-header">
+        <button
+          class="add-movie-button"
+          @click="openAddMovieDialog()"
+        >
+          ADD MOVIE
+        </button>
+      </div>
+      <div class="movie-list">
+        <div
+          class="movie-item"
+          v-for="(movie, movieIndex) in movies"
+          :key="movie.id"
+        >
+          <div class="movie-item-image-wrapper">
+            <div class="movie-item-star-wrapper">
+              <StarIcon
+                class="movie-item-star-rating-icon"
+                :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']"
+              />
+              <div class="movie-item-star-content-wrapper">
+                <span
+                  v-if="movie.rating"
+                  class="movie-item-star-content-rating-rated"
+                >
+                  {{ movie.rating }}
+                </span>
+                <span v-else class="movie-item-star-content-rating-not-rated">
+                  -
+                </span>
+              </div>
             </div>
+            <img :src="movie.image" class="movie-item-image" alt="" />
           </div>
-          <img :src="movie.image" class="movie-item-image" alt="" />
-        </div>
 
-        <div class="movie-item-content-wrapper">
-          <div class="movie-item-title-wrapper">
-            <h3 class="movie-item-title">{{ movie.name }}</h3>
-            <div class="movie-item-genres-wrapper">
-              <span
-                v-for="genre in movie.genres"
-                :key="`${movie.id}-${genre}`"
-                class="movie-item-genre-tag"
-                >{{ genre }}</span
-              >
+          <div class="movie-item-content-wrapper">
+            <div class="movie-item-title-wrapper">
+              <h3 class="movie-item-title">{{ movie.name }}</h3>
+              <div class="movie-item-genres-wrapper">
+                <span
+                  v-for="genre in movie.genres"
+                  :key="`${movie.id}-${genre}`"
+                  class="movie-item-genre-tag"
+                  >{{ genre }}</span
+                >
+              </div>
             </div>
-          </div>
-          <div class="movie-item-description-wrapper">
-            <p class="movie-item-description">{{ movie.description }}</p>
-          </div>
-          <div class="movie-item-rating-wrapper">
-            <span class="movie-item-rating-text">
-              Rating: ({{ movie.rating }}/5)
-            </span>
+            <div class="movie-item-description-wrapper">
+              <p class="movie-item-description">{{ movie.description }}</p>
+            </div>
+            <div class="movie-item-rating-wrapper">
+              <span class="movie-item-rating-text">
+                Rating: ({{ movie.rating }}/5)
+              </span>
 
-            <div class="movie-item-star-icon-wrapper">
-              <button
-                v-for="star in 5"
-                :key="star"
-                class="movie-item-star-icon-button"
-                :class="[
-                  star <= movie.rating ? 'text-yellow-500' : 'text-gray-500',
-                ]"
-                :disabled="star === movie.rating"
-                @click="updateRating(movieIndex, star)"
-              >
-                <StarIcon class="movie-item-star-icon" />
-              </button>
+              <div class="movie-item-star-icon-wrapper">
+                <button
+                  v-for="star in 5"
+                  :key="star"
+                  class="movie-item-star-icon-button"
+                  :class="[
+                    star <= movie.rating ? 'text-yellow-500' : 'text-gray-500',
+                  ]"
+                  :disabled="star === movie.rating"
+                  @click="updateRating(movieIndex, star)"
+                >
+                  <StarIcon class="movie-item-star-icon" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
+      </div>
+      <div class="form-overlay" v-if="isFormOpen">
+        <slot > 
+          <Form v-model="filmDetails" @update:model-value="addMovie" />
+        </slot>
+    </div>
 </template>
