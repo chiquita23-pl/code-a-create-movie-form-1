@@ -5,12 +5,6 @@ import { items } from "./movies.json";
 import Form from "./Form.vue";
 const movies = ref(items);
 const isFormOpen = ref(false);
-const filmDetails = ref({
-  name: "",
-  description: "",
-  image: "",
-  genres: [],
-});
 
 function openAddMovieDialog() {
   isFormOpen.value = true;
@@ -118,8 +112,7 @@ function closeAddMovieDialog() {
     </div>
     <div v-if="isFormOpen" class="form-overlay">
       <div class="form-container">
-        <Form @close="closeAddMovieDialog" v-model="filmDetails" @add-movie="addMovie"/>
-        <button class="close-button" @click="closeAddMovieDialog()">Close</button>
+        <Form @close="closeAddMovieDialog" @add-movie="addMovie"/>
       </div>
     </div>
   </div>

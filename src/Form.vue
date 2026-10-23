@@ -1,38 +1,15 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
-const props = defineProps({
-  modelValue: {
-    type: Object,
-    required: true,
-  },
-});
+const emit = defineEmits(["add-movie", "close"]);
 
-const emit = defineEmits(["add-movie"]);
-
-const name = ref(props.modelValue.name);
-const description = ref(props.modelValue.description);
-const image = ref(props.modelValue.image);
-const genresInput = ref(props.modelValue.genres.join(", "));
-
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    name.value = newVal.name;
-    description.value = newVal.description;
-    image.value = newVal.image;
-    genresInput.value = newVal.genres.join(", ");
-  }
-);
+const name = ref("");
+const description = ref("");
+const image = ref("");
+const genresInput = ref("");
 
 function submitForm() {
   const genres = genresInput.value.split(",").map((g) => g.trim());
-  console.log("Submitting form with values:", {
-    name: name.value,
-    description: description.value,
-    image: image.value,
-    genres,
-  });
   emit("add-movie", {
     name: name.value,
     description: description.value,
@@ -40,11 +17,17 @@ function submitForm() {
     genres,
   });
 }
+function closeAddMovieDialog() {
+  emit("close");
+}
 </script>
 
 <template>
   <div class="form-container">
-    <h2 class="form-title">Add Movie</h2>
+<div class="form-header">
+      <h2 class="form-title">Add Movie</h2>
+      <button type="button" class="icon-close-button" @click="closeAddMovieDialog">✕</button>
+    </div>
     <form @submit.prevent="submitForm" class="form">
       <div class="form-field">
         <label for="name" class="form-label">Name:</label>
@@ -58,7 +41,6 @@ function submitForm() {
       </div>
 
       <div class="form-field">
-
         <label for="description" class="form-label">Description:</label>
         <textarea
           id="description"
@@ -80,7 +62,7 @@ function submitForm() {
       </div>
 
       <div class="form-field">
-        <label for="genres" class="form-label">Genres (comma-separated):</label>
+        <label for="genres" class="form-label">Genres <span class="form-hint">(comma-separated)</span></label>
         <input
           type="text"
           id="genres"
@@ -89,8 +71,14 @@ function submitForm() {
           class="form-input"
         />
       </div>
-
-      <button type="submit" class="submit-button">Add Movie</button>
+      <div class="form-actions">
+        <button type="button" class="button button-secondary" @click="closeAddMovieDialog">
+          Cancel
+        </button>
+        <button type="submit" class="button button-primary">
+          Add Movie
+        </button>
+      </div>
     </form>
   </div>
 </template>
