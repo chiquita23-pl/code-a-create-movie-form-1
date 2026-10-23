@@ -16,28 +16,27 @@ function openAddMovieDialog() {
   isFormOpen.value = true;
 }
 
-function addMovie() {
+function addMovie(myFilmDetails) {
   const newMovie = {
     id: movies.value.length + 1,
-    name: filmDetails.value.name,
-    description: filmDetails.value.description,
-    image: filmDetails.value.image,
-    genres: filmDetails.value.genres,
+    name: myFilmDetails.name,
+    description: myFilmDetails.description,
+    image: myFilmDetails.image,
+    genres: myFilmDetails.genres,
     rating: null,
   };
   movies.value.push(newMovie);
-  filmDetails.value = {
-    name: "",
-    description: "",
-    image: "",
-    genres: [],
-  };
-  isFormOpen.value = false;
+  closeAddMovieDialog();
 }
 
 function updateRating(movieIndex, rating) {
   movies.value[movieIndex].rating = rating;
 }
+
+function closeAddMovieDialog() {
+  isFormOpen.value = false;
+}
+
 </script>
 
 <template>
@@ -116,11 +115,12 @@ function updateRating(movieIndex, rating) {
           </div>
         </div>
       </div>
-  </div>
-      </div>
-      <div class="form-overlay" v-if="isFormOpen">
-        <slot > 
-          <Form v-model="filmDetails" @update:model-value="addMovie" />
-        </slot>
     </div>
+    <div v-if="isFormOpen" class="form-overlay">
+      <div class="form-container">
+        <Form @close="closeAddMovieDialog" v-model="filmDetails" @add-movie="addMovie"/>
+        <button class="close-button" @click="closeAddMovieDialog()">Close</button>
+      </div>
+    </div>
+  </div>
 </template>

@@ -8,7 +8,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["add-movie"]);
 
 const name = ref(props.modelValue.name);
 const description = ref(props.modelValue.description);
@@ -27,7 +27,13 @@ watch(
 
 function submitForm() {
   const genres = genresInput.value.split(",").map((g) => g.trim());
-  emit("update:modelValue", {
+  console.log("Submitting form with values:", {
+    name: name.value,
+    description: description.value,
+    image: image.value,
+    genres,
+  });
+  emit("add-movie", {
     name: name.value,
     description: description.value,
     image: image.value,

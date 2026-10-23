@@ -118,3 +118,23 @@
 .movie-list-header {
   @apply flex justify-end mb-5;
 }
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+}
